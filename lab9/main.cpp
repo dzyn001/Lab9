@@ -1,15 +1,20 @@
 #include <iostream>
 #include <thread>
+#include <vector>
 
-int main()
-{
-    std::thread t1([](int x) { std::cout << "Square of " << x << " = " << x * x << std::endl; }, 2);
-    std::thread t2([](int x) { std::cout << "Square of " << x << " = " << x * x << std::endl; }, 3);
-    std::thread t3([](int x) { std::cout << "Square of " << x << " = " << x * x << std::endl; }, 4);
+int main() {
+    std::vector<std::thread> threads;
 
-    t1.join();
-    t2.join();
-    t3.join();
+    for (int i = 1; i <= 3; ++i) {
+        threads.emplace_back([i]() {
+            int result = i * i;
+            std::cout << "Thread " << i << ": " << i << "^2 = " << result << std::endl;
+        });
+    }
+
+    for (auto& t : threads) {
+        t.join();
+    }
 
     return 0;
 }
